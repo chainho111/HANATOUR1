@@ -36,3 +36,48 @@ cust_df = cust_df.reset_index()
 cust_df['Recency'] = datetime.datetime(2021,10,2) - cust_df['Recency']
 cust_df['Recency'] = cust_df['Recency'].apply(lambda x:x.days+1)
 print(cust_df)
+
+
+print(cust_df[['Recency','Frequency', 'Monetary']].describe())
+
+fig, (ax1, ax2, ax3) = plt.subplots(figsize=(12,4), nrows=1, ncols=3)
+ax1.set_title('Recency')
+ax1.hist(cust_df['Recency'])
+
+ax2.set_title('Frequency')
+ax2.hist(cust_df['Frequency'])
+
+ax3.set_title('Monetary')
+ax3.hist(cust_df['Monetary'])
+
+# plt.show()
+
+
+## K-Means Cluster 적용
+X_feature = cust_df[['Recency', 'Frequency', 'Monetary']].values
+X_feature_scaled = StandardScaler().fit_transform(X_feature)
+
+kmeans = KMeans(n_clusters=3, random_state=0)
+labels = kmeans.fit_predict((X_feature_scaled))
+cust_df['cluster_label'] = labels
+print(silhouette_score(X_feature_scaled, labels))
+
+CM.visualize_silhouette([2,3,4,5], X_feature_scaled)
+
+
+
+cust_df['Recency_log'] = np.log1p((cust_df['Recency']))
+cust_df['Frequency_log'] = np.log1p((cust_df['Frequency']))
+cust_df['Monetary_log'] = np.log1p((cust_df['Monetary']))
+
+X_feature_log = cust_df[['Recency_log', 'Frequency_log', 'Monetary_log']].values
+X_feature_scaled_log = StandardScaler().fit_transform(X_feature_log)
+
+kmeans = KMeans(n_clusters=3, random_state=0)
+labels = kmeans.fit_predict((X_feature_scaled_log))
+cust_df['cluster_label_log'] = labels
+print(silhouette_score(X_feature_scaled_log, labels))
+
+CM.visualize_silhouette([2,3,4,5], X_feature_scaled_log)
+
+CM.
