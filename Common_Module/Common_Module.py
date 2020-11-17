@@ -97,3 +97,4 @@ def get_clf_eval(y_test, y_pred):
     print('재현율: {:.4f}'.format(recall))
     print('F1: {:.4f}'.format(F1))
     print('AUC: {:.4f}'.format(AUC))
+
